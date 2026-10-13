@@ -9,10 +9,10 @@ export default function PaginaProduto({ produtos, onAdicionar }) {
       <div className="estado-vazio">
         <p>Produto não encontrado.</p>
         <Link to="/" className="botao botao-secundario">
-          Voltar para a loja
+          Voltar para  a loja
         </Link>
       </div>
-    )
+    ) 
   }
 
   const relacionados = produtos
