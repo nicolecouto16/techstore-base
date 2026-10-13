@@ -5,6 +5,8 @@ import { formatarPreco } from '../utils/formatarPreco'
 export default function ProdutoCard({ produto, onAdicionar }) {
   const indisponivel = !produtoDisponivel(produto)
   const esgotado = produto.estoque === 0
+  const valorDoProduto = Number(produto.price)
+  const freteGratisNoProduto = Number.isFinite(valorDoProduto) && valorDoProduto >= 200
 
   return (
     <article className="card">
@@ -27,7 +29,7 @@ export default function ProdutoCard({ produto, onAdicionar }) {
       </div>
 
       <div className="card-selos">
-        {produto.price > 100 && <span className="selo selo-frete">Frete grátis</span>}
+        {freteGratisNoProduto && <span className="selo selo-frete">Frete grátis</span>}
         {(esgotado || indisponivel) && <span className="selo selo-esgotado">Indisponível</span>}
       </div>
 

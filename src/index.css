@@ -434,6 +434,66 @@ h2 {
   color: var(--cor-frete);
 }
 
+.painel-resumo {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin: var(--espaco-5) 0;
+}
+
+.metrica-card {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: var(--espaco-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+}
+
+.metrica-titulo {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metrica-valor {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.painel-categorias {
+  display: grid;
+  gap: var(--espaco-4);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.categoria-card {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: var(--espaco-4);
+}
+
+.categoria-card h3 {
+  margin: 0 0 var(--espaco-3);
+  text-transform: capitalize;
+}
+
+.categoria-card p {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espaco-2);
+  margin: 0;
+  padding: var(--espaco-2) 0;
+  border-top: 1px solid var(--cor-borda);
+}
+
+.categoria-card p:first-of-type {
+  border-top: none;
+}
+
 /* Botões */
 
 .botao {

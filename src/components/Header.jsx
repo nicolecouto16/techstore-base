@@ -20,6 +20,9 @@ export default function Header({ clienteAtual, carrinho = [] }) {
           <NavLink to="/estoque" className="nav-link nav-link-interna">
             Área interna
           </NavLink>
+          <NavLink to="/painel" className="nav-link nav-link-interna">
+            Painel do lojista
+          </NavLink>
         </nav>
 
         <div className="header-acoes">

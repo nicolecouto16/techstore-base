@@ -1,6 +1,4 @@
-// Página usada pelo time de estoque para acompanhar a quantidade de cada produto
 export default function Estoque({ produtos, listaEspera = [] }) {
-  // slice cria uma cópia, para o sort não alterar a lista original
   const ordenados = produtos.slice().sort((a, b) => a.estoque - b.estoque)
 
   const esperasPorProduto = listaEspera.reduce((acumulador, item) => {
