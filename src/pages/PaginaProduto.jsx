@@ -1,23 +1,54 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router'
+import { produtoDisponivel } from '../utils/carrinho'
+import { formatarPreco } from '../utils/formatarPreco'
 
-export default function PaginaProduto({ produtos, onAdicionar }) {
+export default function PaginaProduto({ produtos, onAdicionar, onRegistrarEspera }) {
   const { id } = useParams()
   const produto = produtos.find((item) => item.id === id)
+  const [nome, setNome] = useState('')
+  const [email, setEmail] = useState('')
+  const [mensagemEspera, setMensagemEspera] = useState('')
 
   if (!produto) {
     return (
       <div className="estado-vazio">
         <p>Produto não encontrado.</p>
         <Link to="/" className="botao botao-secundario">
-          Voltar para  a loja
+          Voltar para a loja
         </Link>
       </div>
-    ) 
+    )
   }
 
+  const esgotado = produto.estoque === 0
+  const preco = Number(produto.price)
+  const disponivel = produtoDisponivel(produto)
+
   const relacionados = produtos
-    .filter((item) => item.category === produto.category && item.id !== produto.id)
+    .filter(
+      (item) =>
+        item.category === produto.category &&
+        item.id !== produto.id &&
+        produtoDisponivel(item)
+    )
     .slice(0, 4)
+
+  function registrarInteresse(evento) {
+    evento.preventDefault()
+
+    const nomeTrim = nome.trim()
+    const emailTrim = email.trim()
+
+    if (!nomeTrim || !emailTrim) {
+      return
+    }
+
+    onRegistrarEspera(produto.id, nomeTrim, emailTrim)
+    setNome('')
+    setEmail('')
+    setMensagemEspera('Você entrou na lista de espera. Vamos avisar quando ele voltar!')
+  }
 
   return (
     <section>
@@ -37,17 +68,49 @@ export default function PaginaProduto({ produtos, onAdicionar }) {
           <p className="card-avaliacao">
             ★ {produto.rating.rate} <span>({produto.rating.count} avaliações)</span>
           </p>
-          <p className="detalhe-preco">R$ {produto.price.toFixed(2).replace('.', ',')}</p>
+          <p className="detalhe-preco">
+            {Number.isFinite(preco) ? formatarPreco(preco) : 'Preço indisponível'}
+          </p>
           <p className="detalhe-descricao">{produto.description}</p>
-          <p className="detalhe-estoque">{produto.estoque} unidades disponíveis</p>
+          <p className="detalhe-estoque">
+            {esgotado ? 'Esgotado no momento' : `${produto.estoque} unidades disponíveis`}
+          </p>
 
-          <button
-            className="botao botao-grande"
-            onClick={() => onAdicionar(produto)}
-            disabled={produto.estoque === 0}
-          >
-            Adicionar ao carrinho
-          </button>
+          {!esgotado && (
+            <button
+              className="botao botao-grande"
+              onClick={() => onAdicionar(produto)}
+              disabled={!disponivel}
+            >
+              {disponivel ? 'Adicionar ao carrinho' : 'Indisponível'}
+            </button>
+          )}
+
+          {esgotado && (
+            <form onSubmit={registrarInteresse} className="cupom" style={{ marginTop: '1rem' }}>
+              <label htmlFor="nome-espera" className="rotulo">
+                Avise-me quando voltar
+              </label>
+              <input
+                id="nome-espera"
+                value={nome}
+                onChange={(evento) => setNome(evento.target.value)}
+                placeholder="Seu nome"
+                style={{ marginBottom: '0.5rem' }}
+              />
+              <input
+                type="email"
+                value={email}
+                onChange={(evento) => setEmail(evento.target.value)}
+                placeholder="Seu e-mail"
+                style={{ marginBottom: '0.5rem' }}
+              />
+              <button type="submit" className="botao botao-grande">
+                Me avisem
+              </button>
+              {mensagemEspera && <p className="mensagem-cupom">{mensagemEspera}</p>}
+            </form>
+          )}
 
           <ul className="detalhe-garantias">
             <li>Troca grátis em até 30 dias</li>
@@ -67,8 +130,8 @@ export default function PaginaProduto({ produtos, onAdicionar }) {
               <h3 className="card-titulo">{item.title}</h3>
             </Link>
             <p className="preco">R$ {Number(item.price).toFixed(2).replace('.', ',')}</p>
-            <button className="botao" onClick={() => onAdicionar(item)}>
-              Adicionar ao carrinho
+            <button className="botao" onClick={() => onAdicionar(item)} disabled={!produtoDisponivel(item)}>
+              {produtoDisponivel(item) ? 'Adicionar ao carrinho' : 'Indisponível'}
             </button>
           </article>
         ))}

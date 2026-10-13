@@ -1,6 +1,9 @@
 import { Link, NavLink } from 'react-router'
+import { agruparItens } from '../utils/carrinho'
 
-export default function Header({ clienteAtual }) {
+export default function Header({ clienteAtual, carrinho = [] }) {
+  const quantidadeItens = agruparItens(carrinho).reduce((total, item) => total + item.quantidade, 0)
+
   return (
     <header className="header">
       <p className="faixa-aviso">Troca grátis em até 30 dias · Parcele em até 10x sem juros</p>
@@ -26,13 +29,16 @@ export default function Header({ clienteAtual }) {
             </p>
           )}
 
-          <Link to="/carrinho" className="mini-carrinho">
+          <Link to="/carrinho" className="mini-carrinho" aria-label={`Carrinho com ${quantidadeItens} itens`}>
             <svg className="mini-carrinho-icone" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6 7h13l-1.5 8.5a2 2 0 0 1-2 1.5H9.5a2 2 0 0 1-2-1.6L5.6 4H3" />
               <circle cx="10" cy="20.5" r="1.2" />
               <circle cx="17" cy="20.5" r="1.2" />
             </svg>
-            <span className="mini-carrinho-texto">Carrinho</span>
+            <span className="mini-carrinho-texto">
+              Carrinho
+              <small>{quantidadeItens} {quantidadeItens === 1 ? 'item' : 'itens'}</small>
+            </span>
           </Link>
         </div>
       </div>
